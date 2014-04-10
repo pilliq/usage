@@ -1,10 +1,13 @@
 $(document).ready(function() {
     var margin = {top: 20, right: 20, bottom: 30, left: 40},
-        width = 960 - margin.left - margin.right,
-        height = 600 - margin.top - margin.bottom;
+        width = 650 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
 
     var x = d3.scale.ordinal()
         .rangeRoundBands([0, width], .2);
+
+    var xTime = d3.time.scale()
+        .range([0, width]);
 
     var y = d3.scale.linear()
         .rangeRound([height, 0]);
@@ -12,16 +15,24 @@ $(document).ready(function() {
     color = d3.scale.ordinal()
         .range(["#6ca439", "#a9c888"]);
 
-    var xAxis = d3.svg.axis()
+    var xAxis1 = d3.svg.axis() // months
         .scale(x)
         .orient("bottom")
         .tickSize(0)
-        .tickFormat(d3.time.format("%b %y"));
+        .tickFormat(d3.time.format("%b"));
+
+    var xAxis2 = d3.svg.axis() // years
+        .scale(xTime)
+        .ticks(d3.time.years, 1)
+        .tickFormat(d3.time.format("%y"))
+        .tickSize(0)
+        .orient("bottom");
 
     var yAxis = d3.svg.axis()
         .scale(y)
         .orient("left")
-        .tickFormat(d3.format(".2s"));
+        .tickSize(-width)
+        .tickFormat(d3.format("s"));
 
     var svg = d3.select("#viz").append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -48,14 +59,24 @@ $(document).ready(function() {
         });
 
         color.domain(d3.keys(data[0].value));
-
-        x.domain(data.map(function(d) { return d["_id"]; })); // return an array of dates as the domain
+        var xDomain = data.map(function(d) { return d["_id"]; }); // return an array of dates as the domain
+        x.domain(xDomain);
+        xTime.domain(xDomain);
         y.domain([0, d3.max(data, function(d) { return +d.value.unique + +d.value.total; })]);
 
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0,"+ height + ")")
-            .call(xAxis);
+            .call(xAxis1);
+
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0,"+ (height+20) + ")")
+            .call(xAxis2);
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
 
         var dates = svg.selectAll("g.date")
             .data(data);
