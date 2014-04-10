@@ -57,6 +57,10 @@ def versions():
 def viz():
     return flask.render_template('viz.html')
 
+@app.route('/pie_viz')
+def pie_viz():
+    return flask.render_template('pie_viz.html')
+
 if __name__ == '__main__':
     app.debug = True
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=8080)

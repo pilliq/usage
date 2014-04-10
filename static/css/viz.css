@@ -13,3 +13,18 @@ body {
 .y.axis path {
     display: none;
 }
+
+
+/* for donut chart */
+path.slice{
+	stroke: #fff;
+	stroke-width:1px;
+}
+
+polyline{
+	/*stroke: #dee0e3;*/
+	opacity: 0.2;
+	stroke: #000;
+	stroke-width: 1px;
+	fill: none;
+}
