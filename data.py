@@ -61,6 +61,10 @@ def viz():
 def pie_viz():
     return flask.render_template('pie_viz.html')
 
+@app.route('/email_template')
+def email_template():
+    return flask.render_template('email_template.html')
+
 if __name__ == '__main__':
     app.debug = True
     app.run(host='0.0.0.0', port=8080)
