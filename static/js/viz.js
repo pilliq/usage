@@ -1,7 +1,7 @@
 $(document).ready(function() {
-    var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    var margin = {top: 20, right: 20, bottom: 30, left: 40, legend: 75},
         width = 650 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+        height = 400 - margin.top - margin.bottom + margin.legend;
 
     var x = d3.scale.ordinal()
         .rangeRoundBands([0, width], .2);
@@ -36,9 +36,9 @@ $(document).ready(function() {
 
     var svg = d3.select("#viz").append("svg")
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("height", height + margin.top + margin.bottom + margin.legend)
       .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("transform", "translate(" + margin.left + "," + (margin.top + margin.legend) + ")");
 
     d3.json("/monthly", function(err, allData) {
         // parse dates into objects
@@ -101,6 +101,39 @@ $(document).ready(function() {
         dates.selectAll("rect.data")
             .attr("x", function(d) { return x(d["_id"]); })
             .attr("width", x.rangeBand());
+        
+        var legend = d3.select("#viz").append("svg")
+            .attr("class", "legend")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", 300)
+          .selectAll(".elem")
+              .data(color.domain().slice().reverse());
+
+        //var legend = d3.select("#viz").select("svg").selectAll(".legend")
+        //    .data(color.domain().slice().reverse())
+        //  .enter().append("g")
+        //    .attr("class", "legend")
+        //    .attr("transform", function(d, i) { return "translate(" + ((i * 200) - 400)+ ",0)"; });
+
+        //legend.append("rect")
+        //    .attr("x", width - 18)
+        //    .attr("width", 18)
+        //    .attr("height", 18)
+        //    .style("fill", color);
+
+        //legend.append("text")
+        //    .attr("x", width - 24)
+        //    .attr("y", 9)
+        //    .attr("dy", ".35em")
+        //    .style("text-anchor", "end")
+        //    .text(function(d) { return (d + " downloads").toUpperCase(); });
+
+        //legend.append("text")
+        //    .attr("x", function(d) { return width - ((d + " downloads").length * 4.80); })
+        //    .attr("y", 18)
+        //    .attr("dy", "1em")
+        //    .style("text-anchor", "middle")
+        //    .text(function(d) { return (d + " downloads").toUpperCase(); });
 
     });
 });
