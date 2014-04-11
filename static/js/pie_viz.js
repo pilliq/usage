@@ -9,6 +9,17 @@ $(document).ready(function() {
     //         {"label":"three", "value":30}];
     
     d3.json("/os", function(err, data) {
+        var osNameMap = {
+            "win32": "Windows",
+            "osx": "Mac OS X",
+            "linux": "Linux",
+            "src": "Source"
+        };
+
+        _.each(data, function(element, index) {
+            element.label = osNameMap[element._id];
+        });
+
         var svg = d3.select("#viz")
             .append("svg")
             .append("g");
@@ -40,7 +51,7 @@ $(document).ready(function() {
 
         svg.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-        var key = function(d) { return d.data._id; };
+        var key = function(d) { return d.data.label; };
 
         var color = d3.scale.ordinal()
             .domain([data[0]._id, data[1]._id, data[2]._id, data[3]._id, data[4]._id, data[5]._id])
@@ -66,7 +77,7 @@ $(document).ready(function() {
 
             slice.enter()
                 .insert("path")
-                .style("fill", function(d) { return color(d.data._id); })
+                .style("fill", function(d) { return color(d.data.label); })
                 .attr("class", "slice");
 
             slice
@@ -85,14 +96,26 @@ $(document).ready(function() {
 
             /* ------- TEXT LABELS -------*/
 
+            var comma = d3.format(",");
+
             var text = svg.select(".labels").selectAll("text")
                 .data(pie(data), key);
 
             text.enter()
+                .append("g")
+                .attr("class", "label")
                 .append("text")
-                .attr("dy", ".35em")
+                .attr("class", "value")
+                .attr("dy", "-6px")
                 .text(function(d) {
-                    return d.data._id + ' - ' + d.data.value;
+                    return comma(d.data.value);
+                });
+            d3.selectAll(".label")
+                .append("text")
+                .attr("class", "os")
+                .attr("dy", "15px")
+                .text(function(d) {
+                    return d.data.label;
                 });
             
             function midAngle(d) {
@@ -107,7 +130,7 @@ $(document).ready(function() {
                     return function(t) {
                         var d2 = interpolate(t);
                         var pos = outerArc.centroid(d2);
-                        pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
+                        pos[0] = radius * 1.2 * (midAngle(d2) < Math.PI ? 1 : -1);
                         return "translate("+ pos +")";
                     };
                 })
@@ -117,7 +140,7 @@ $(document).ready(function() {
                     this._current = interpolate(0);
                     return function(t) {
                         var d2 = interpolate(t);
-                        return midAngle(d2) < Math.PI ? "start" : "end";
+                        return midAngle(d2) < Math.PI ? "end" : "start";
                     };
                 });
 
@@ -140,7 +163,7 @@ $(document).ready(function() {
                     return function(t) {
                         var d2 = interpolate(t);
                         var pos = outerArc.centroid(d2);
-                        pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
+                        pos[0] = radius * 1.2 * (midAngle(d2) < Math.PI ? 1 : -1);
                         return [arc.centroid(d2), outerArc.centroid(d2), pos];
                     };
                 });
