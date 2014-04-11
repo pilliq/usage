@@ -40,6 +40,8 @@ $(document).ready(function() {
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + (margin.top) + ")");
 
+    var comma = d3.format(",");
+
     d3.json("/monthly", function(err, allData) {
         // parse dates into objects
         for (var i = 0; i < allData.length; i++) {
@@ -57,6 +59,13 @@ $(document).ready(function() {
         data.sort(function(a, b) {
             return (a["_id"] < b["_id"]) ? -1 : 1;
         });
+        var current = data[data.length-1];
+        console.log(current);
+        d3.select("#total-downloads")
+            .text(comma(current.value.total));
+        d3.select("#unique-downloads")
+            .text(comma(current.value.unique));
+        
 
         color.domain(d3.keys(data[0].value));
         var xDomain = data.map(function(d) { return d["_id"]; }); // return an array of dates as the domain
