@@ -1,7 +1,7 @@
 $(document).ready(function() {
-    var margin = {top: 20, right: 20, bottom: 30, left: 40, legend: 75},
+    var margin = {top: 20, right: 20, bottom: 50, left: 40, legend: 75},
         width = 650 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom + margin.legend;
+        height = 400 - margin.top - margin.bottom;
 
     var x = d3.scale.ordinal()
         .rangeRoundBands([0, width], .2);
@@ -10,7 +10,7 @@ $(document).ready(function() {
         .range([0, width]);
 
     var y = d3.scale.linear()
-        .rangeRound([height, 0]);
+        .range([height, 0]);
 
     color = d3.scale.ordinal()
         .range(["#6ca439", "#a9c888"]);
@@ -36,9 +36,9 @@ $(document).ready(function() {
 
     var svg = d3.select("#viz").append("svg")
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom + margin.legend)
+        .attr("height", height + margin.top + margin.bottom)
       .append("g")
-        .attr("transform", "translate(" + margin.left + "," + (margin.top + margin.legend) + ")");
+        .attr("transform", "translate(" + margin.left + "," + (margin.top) + ")");
 
     d3.json("/monthly", function(err, allData) {
         // parse dates into objects
@@ -66,17 +66,17 @@ $(document).ready(function() {
 
         svg.append("g")
             .attr("class", "x axis")
-            .attr("transform", "translate(0,"+ height + ")")
+            .attr("transform", "translate(0,"+ (height+4) + ")")
             .call(xAxis1);
 
         svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0,"+ (height+20) + ")")
+            .attr("class", "xx axis")
+            .attr("transform", "translate(30,"+ (height+17) + ")")
             .call(xAxis2);
 
         svg.append("g")
             .attr("class", "y axis")
-            .call(yAxis)
+            .call(yAxis);
 
         var dates = svg.selectAll("g.date")
             .data(data);
@@ -89,13 +89,13 @@ $(document).ready(function() {
             .attr("fill", color("unique"));
         
         bottom.attr("y", function(d) { return y(+d.value.unique); })
-            .attr("height", function(d) { return Math.abs(y(d.value.unique) - y(0)) });
+            .attr("height", function(d) { return Math.abs(y(d.value.unique) - y(0)); });
 
         var top = dates.append("rect")
             .attr("class", "data total")
             .attr("fill", color("total"));
 
-        top.attr("y", function(d) { return y(+d.value.unique + +d.value.total); })
+        top.attr("y", function(d) { var val = y(+d.value.unique + +d.value.total) - 1.25; console.log(val); return val; })
             .attr("height", function(d) { return Math.abs(y(d.value.total) - y(0)); });
 
         dates.selectAll("rect.data")

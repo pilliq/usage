@@ -1,11 +1,27 @@
 <html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="/static/css/viz.css" />
-    </head>
-    <body>
-        <div id="viz"></div>
-        <script type="text/javascript" src="/static/js/jquery.min.js"></script>
-        <script type="text/javascript" src="/static/js/d3.min.js"></script>
-        <script type="text/javascript" src="/static/js/viz.js"></script>
-    </body>
+  <head>
+    <link rel="stylesheet" type="text/css" href="/static/css/viz.css" />
+  </head>
+  <body>
+    <div class="big-stats clearfix">
+      <div class="stat">
+        <div class="label">
+          <span class="square" style="background:#a9c888;"></span>
+          <span class="label-text">Total Downloads</span>
+        </div>
+        <span class="big-number">259,938</span>
+      </div>
+      <div class="stat">
+        <div class="label">
+          <span class="square" style="background:#6ca439;"></span>
+          <span class="label-text">Unique Downloads</span>
+        </div>
+        <span class="big-number">86,945</span>
+      </div>
+    </div>
+    <div id="viz"></div>
+    <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/d3.min.js"></script>
+    <script type="text/javascript" src="/static/js/viz.js"></script>
+  </body>
 </html>

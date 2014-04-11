@@ -4,18 +4,77 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+.clearfix { display: inline-block; }
+/* start commented backslash hack \*/
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }
+/* close commented backslash hack */
+
 .axis path,
 .axis line {
   fill: none;
-  stroke: #000;
+  stroke: #f5f6f7;
   shape-rendering: crispEdges;
 }
 
 .x.axis path,
+.xx.axis path,
 .y.axis path {
   display: none;
 }
 
+.y.axis .tick text {
+  fill: #c0bfbf;
+  font-size: 12px;
+}
+
+.x.axis .tick text {
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: bold;
+  fill: #494747;
+}
+
+.xx.axis .tick text {
+  font-size: 18px;
+  font-weight: bold;
+  fill: #dee0e3;
+}
+
+.big-stats .stat {
+  float: left;
+  margin-right: 50px;
+}
+
+.big-stats .stat .label .square {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 4px;
+  margin-bottom: -1px;
+}
+
+.big-stats .stat .label .label-text {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: bold;
+  color: #807f7f;
+  text-transform: uppercase;
+}
+
+.big-stats .stat .big-number {
+  font-size: 60px;
+  color: #494747;
+  font-weight: bold;
+}
 
 /* for donut chart */
 path.slice{
