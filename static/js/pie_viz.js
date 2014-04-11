@@ -8,16 +8,32 @@ $(document).ready(function() {
     //         {"label":"two", "value":50}, 
     //         {"label":"three", "value":30}];
     
-    d3.json("/os", function(err, data) {
+    d3.json("/os", function(err, allData) {
         var osNameMap = {
             "win32": "Windows",
             "osx": "Mac OS X",
             "linux": "Linux",
-            "src": "Source"
+            "src": "Source",
+            "other": "Other"
         };
 
+        var data = [];
+        var other = {_id: "other", value: 0};
+        _.each(allData, function(element, index) {
+            if (typeof osNameMap[element._id] !== "undefined") {
+                console.log(element);
+                data.push(element);
+            } else {
+                console.log("bad:" + JSON.stringify(element));
+                other.value += element.value;
+            }
+        });
+        data.push(other); 
         _.each(data, function(element, index) {
             element.label = osNameMap[element._id];
+            if (typeof element.label == "undefined") {
+                element.label = "Other";
+            }
         });
 
         var svg = d3.select("#viz")
@@ -54,8 +70,8 @@ $(document).ready(function() {
         var key = function(d) { return d.data.label; };
 
         var color = d3.scale.ordinal()
-            .domain([data[0]._id, data[1]._id, data[2]._id, data[3]._id, data[4]._id, data[5]._id])
-            .range(["#373e50", "#535d77", "#6e7c9f", "#8b96b2", "#a8b0c5", "#c5cbd9"]);
+            .domain([data[0]._id, data[1]._id, data[2]._id, data[3]._id, data[4]._id])
+            .range(["#373e50", "#535d77", "#6e7c9f", "#8b96b2", "#a8b0c5"]);
 
 
         // function randomData() {
