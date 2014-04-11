@@ -21,14 +21,13 @@ $(document).ready(function() {
         var other = {_id: "other", value: 0};
         _.each(allData, function(element, index) {
             if (typeof osNameMap[element._id] !== "undefined") {
-                console.log(element);
                 data.push(element);
             } else {
-                console.log("bad:" + JSON.stringify(element));
                 other.value += element.value;
             }
         });
         data.push(other); 
+
         _.each(data, function(element, index) {
             element.label = osNameMap[element._id];
             if (typeof element.label == "undefined") {
@@ -138,6 +137,8 @@ $(document).ready(function() {
                 return d.startAngle + (d.endAngle - d.startAngle)/2;
             }
 
+            var close = (Math.PI*2) - (.05 * Math.PI * 2); // close to top of arc
+
             text.transition().duration(1000)
                 .attrTween("transform", function(d) {
                     this._current = this._current || d;
@@ -146,7 +147,8 @@ $(document).ready(function() {
                     return function(t) {
                         var d2 = interpolate(t);
                         var pos = outerArc.centroid(d2);
-                        pos[0] = radius * 1.2 * (midAngle(d2) < Math.PI ? 1 : -1);
+                        var mid = midAngle(d2);
+                        pos[0] = radius * 1.2 * (mid < Math.PI || mid > close? 1 : -1);
                         return "translate("+ pos +")";
                     };
                 })
@@ -156,7 +158,8 @@ $(document).ready(function() {
                     this._current = interpolate(0);
                     return function(t) {
                         var d2 = interpolate(t);
-                        return midAngle(d2) < Math.PI ? "end" : "start";
+                        var mid = midAngle(d2);
+                        return mid < Math.PI || mid > close ? "end" : "start";
                     };
                 });
 
@@ -177,9 +180,16 @@ $(document).ready(function() {
                     var interpolate = d3.interpolate(this._current, d);
                     this._current = interpolate(0);
                     return function(t) {
+                        console.log(d);
                         var d2 = interpolate(t);
                         var pos = outerArc.centroid(d2);
-                        pos[0] = radius * 1.2 * (midAngle(d2) < Math.PI ? 1 : -1);
+                        end = d.endAngle;
+                        start = d.startAngle;
+                        console.log(midAngle(d));
+                        var mid = midAngle(d2);
+                        console.log("mid: " + mid + ", close: " + close);
+                        pos[0] = radius * 1.2 * (mid < Math.PI || mid > close? 1 : -1);
+                        console.log(pos[0]);
                         return [arc.centroid(d2), outerArc.centroid(d2), pos];
                     };
                 });
