@@ -34,10 +34,15 @@ $(document).ready(function() {
                 element.label = "Other";
             }
         });
+        var width = 800,
+            height = 600,
+            radius = Math.min(width, height) / 2;
 
         var svg = d3.select("#viz")
-            .append("svg")
-            .append("g");
+        .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+        .append("g");
 
         svg.append("g")
             .attr("class", "slices");
@@ -45,10 +50,6 @@ $(document).ready(function() {
             .attr("class", "labels");
         svg.append("g")
             .attr("class", "lines");
-
-        var width = 960,
-            height = 450,
-            radius = Math.min(width, height) / 2;
 
         var pie = d3.layout.pie()
             .sort(null)
@@ -96,14 +97,14 @@ $(document).ready(function() {
                 .attr("class", "slice");
 
             slice
-                .transition().duration(1000)
-                .attrTween("d", function(d) {
-                    this._current = this._current || d;
-                    var interpolate = d3.interpolate(this._current, d);
-                    this._current = interpolate(0);
-                    return function(t) {
-                        return arc(interpolate(t));
-                    };
+                .attr("d", function(d) {
+                    //this._current = this._current || d;
+                    //var interpolate = d3.interpolate(this._current, d);
+                    //this._current = interpolate(0);
+                    //return function(t) {
+                    //    return arc(interpolate(t));
+                    //};
+                    return arc(d);
                 });
 
             slice.exit()
@@ -139,28 +140,34 @@ $(document).ready(function() {
 
             var close = (Math.PI*2) - (.05 * Math.PI * 2); // close to top of arc
 
-            text.transition().duration(1000)
-                .attrTween("transform", function(d) {
-                    this._current = this._current || d;
-                    var interpolate = d3.interpolate(this._current, d);
-                    this._current = interpolate(0);
-                    return function(t) {
-                        var d2 = interpolate(t);
-                        var pos = outerArc.centroid(d2);
-                        var mid = midAngle(d2);
-                        pos[0] = radius * 1.2 * (mid < Math.PI || mid > close? 1 : -1);
-                        return "translate("+ pos +")";
-                    };
+            text
+                .attr("transform", function(d) {
+                    //this._current = this._current || d;
+                    //var interpolate = d3.interpolate(this._current, d);
+                    //this._current = interpolate(0);
+                    //return function(t) {
+                    //    var d2 = interpolate(t);
+                    //    var pos = outerArc.centroid(d2);
+                    //    var mid = midAngle(d2);
+                    //    pos[0] = radius * 1.2 * (mid < Math.PI || mid > close? 1 : -1);
+                    //    return "translate("+ pos +")";
+                    //};
+                    var pos = outerArc.centroid(d);
+                    var mid = midAngle(d);
+                    pos[0] = radius * 1.2 * (mid < Math.PI || mid > close? 1 : -1);
+                    return "translate("+ pos +")";
                 })
-                .styleTween("text-anchor", function(d){
-                    this._current = this._current || d;
-                    var interpolate = d3.interpolate(this._current, d);
-                    this._current = interpolate(0);
-                    return function(t) {
-                        var d2 = interpolate(t);
-                        var mid = midAngle(d2);
-                        return mid < Math.PI || mid > close ? "end" : "start";
-                    };
+                .style("text-anchor", function(d){
+                    //this._current = this._current || d;
+                    //var interpolate = d3.interpolate(this._current, d);
+                    //this._current = interpolate(0);
+                    //return function(t) {
+                    //    var d2 = interpolate(t);
+                    //    var mid = midAngle(d2);
+                    //    return mid < Math.PI || mid > close ? "end" : "start";
+                    //};
+                    var mid = midAngle(d);
+                    return mid < Math.PI || mid > close ? "end" : "start";
                 });
 
             text.exit()
@@ -174,28 +181,33 @@ $(document).ready(function() {
             polyline.enter()
                 .append("polyline");
 
-            polyline.transition().duration(1000)
-                .attrTween("points", function(d){
-                    this._current = this._current || d;
-                    var interpolate = d3.interpolate(this._current, d);
-                    this._current = interpolate(0);
-                    return function(t) {
-                        console.log(d);
-                        var d2 = interpolate(t);
-                        var pos = outerArc.centroid(d2);
-                        end = d.endAngle;
-                        start = d.startAngle;
-                        console.log(midAngle(d));
-                        var mid = midAngle(d2);
-                        console.log("mid: " + mid + ", close: " + close);
-                        pos[0] = radius * 1.2 * (mid < Math.PI || mid > close? 1 : -1);
-                        console.log(pos[0]);
-                        return [arc.centroid(d2), outerArc.centroid(d2), pos];
-                    };
+            polyline
+                .attr("points", function(d){
+                    //this._current = this._current || d;
+                    //var interpolate = d3.interpolate(this._current, d);
+                    //this._current = interpolate(0);
+                    //return function(t) {
+                    //    console.log(d);
+                    //    var d2 = interpolate(t);
+                    //    var pos = outerArc.centroid(d2);
+                    //    end = d.endAngle;
+                    //    start = d.startAngle;
+                    //    console.log(midAngle(d));
+                    //    var mid = midAngle(d2);
+                    //    console.log("mid: " + mid + ", close: " + close);
+                    //    pos[0] = radius * 1.2 * (mid < Math.PI || mid > close? 1 : -1);
+                    //    console.log(pos[0]);
+                    //    return [arc.centroid(d2), outerArc.centroid(d2), pos];
+                    //};
+                    var mid = midAngle(d);
+                    var pos = outerArc.centroid(d);
+                    pos[0] = radius * 1.2 * (mid < Math.PI || mid > close? 1 : -1);
+                    return [arc.centroid(d), outerArc.centroid(d), pos];
                 });
             
             polyline.exit()
                 .remove();
         }
+        console.log(svg.attr("width"));
     });
 });
