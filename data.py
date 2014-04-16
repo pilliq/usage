@@ -36,22 +36,12 @@ def weekly():
 @app.route('/os')
 @with_db
 def os():
-    os = []
-    for i in g.mongo.mongousage['gen.firstPiece.day7'].find().sort('value', pymongo.DESCENDING):
-        bad = False
-        for j in ('.', '-', 'log', 'stats'):
-            if i['_id'].find(j) >= 0:
-                bad = True
-                break
-        if bad:
-            continue
-        os.append(i)
-    return json.dumps(os)
+    return json.dumps([x for x in g.mongo.mongousage['gen.monthly.os'].find().sort('_id', pymongo.DESCENDING)])
 
 @app.route('/versions')
 @with_db
 def versions():
-    return json.dumps([x for x in g.mongo.mongousage['gen.versions'].find().sort('_id', pymongo.DESCENDING)], default=json_util.default)
+    return json.dumps([x for x in g.mongo.mongousage['gen.monthly.version'].find().sort('_id', pymongo.DESCENDING)], default=json_util.default)
 
 @app.route('/viz')
 def viz():
@@ -60,6 +50,10 @@ def viz():
 @app.route('/pie_viz')
 def pie_viz():
     return flask.render_template('pie_viz.html')
+
+@app.route('/stack')
+def stack():
+    return flask.render_template('stack.html')
 
 @app.route('/email_template')
 def email_template():
