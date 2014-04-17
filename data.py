@@ -50,7 +50,7 @@ def os():
 
 @app.route('/os_monthly')
 @with_db
-def os():
+def os_monthly():
     return json.dumps([x for x in g.mongo.mongousage['gen.monthly.os'].find().sort('_id', pymongo.DESCENDING)])
 
 @app.route('/versions')
