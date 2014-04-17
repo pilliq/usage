@@ -26,7 +26,7 @@ $(document).ready(function() {
                 other.value += element.value;
             }
         });
-        data.push(other); 
+        data.push(other);
 
         _.each(data, function(element, index) {
             element.label = osNameMap[element._id];

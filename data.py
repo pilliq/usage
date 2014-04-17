@@ -66,6 +66,10 @@ def viz():
 def pie_viz():
     return flask.render_template('pie_viz.html')
 
+@app.route('/line_viz')
+def line_viz():
+    return flask.render_template('line_viz.html')
+
 @app.route('/stack')
 def stack():
     return flask.render_template('stack.html')

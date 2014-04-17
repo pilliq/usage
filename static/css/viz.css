@@ -53,6 +53,10 @@ body {
   fill: #dee0e3;
 }
 
+.y.axis .tick line {
+  stroke: #ebebed;
+}
+
 .big-stats .stat {
   float: left;
   margin-right: 50px;

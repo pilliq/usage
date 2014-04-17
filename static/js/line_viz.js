@@ -1,0 +1,160 @@
+$(document).ready(function() {
+    var osNameMap = {
+        "win32": "Windows",
+        "osx": "Mac OS X",
+        "linux": "Linux",
+        "src": "Source",
+        "other": "Other"
+    };
+
+    var margin = {top: 20, right: 80, bottom: 50, left: 50},
+        width = 960 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
+
+    var parseDate = d3.time.format("%Y-%m").parse;
+
+    var x = d3.time.scale()
+        .range([0, width]);
+
+    var xTime = d3.time.scale()
+        .range([0, width]);
+
+    var y = d3.scale.linear()
+        .range([height, 0]);
+
+    var color = d3.scale.ordinal()
+        .range(["#373e50", "#535d77", "#6e7c9f", "#8b96b2", "#a8b0c5"]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom")
+        .tickFormat(d3.time.format("%b"));
+
+    console.log('x: ' + x());
+    console.log('xTime: ' + xTime());
+    
+    var xAxis2 = d3.svg.axis() // years
+        .scale(xTime)
+        .ticks(d3.time.years, 1)
+        .tickFormat(d3.time.format("%y"))
+        .tickSize(0)
+        .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .tickSize(-width)
+        .orient("left");
+
+    var line = d3.svg.line()
+        .interpolate("linear")
+        .x(function(d) { return x(d.date); })
+        .y(function(d) { return y(d.downloads); });
+
+    var svg = d3.select("body").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    d3.json("/os_monthly", function(err, rawData) {
+        var groupedData = _.groupBy(rawData, function(datum) {
+            return datum._id.t;
+        });
+
+        var data = _.map(d3.keys(groupedData), function(key, index) {
+            if(index < 12) {
+                console.log(key);
+                console.log(groupedData[key]);
+
+                var othersTotal = 0;
+                var downloads = {};
+                var osStat = {
+                    date: key
+                };
+
+                for(var i=0; i < groupedData[key].length; i++) {
+                    var os = groupedData[key][i]["_id"]["os"];
+
+                    if(os === "win32" || os === "osx" || os === "linux" || os === "src") {
+                        downloads[ groupedData[key][i]["_id"]["os"] ] = groupedData[key][i]["value"];
+                    } else {
+                        othersTotal += groupedData[key][i]["value"];
+                    }
+
+                    downloads["other"] = othersTotal;
+                }
+                _.extend(osStat, downloads);
+
+                return osStat;
+
+            } else {
+                return false;
+            }
+        });
+
+        data = _.reject(data, function(val) {
+            return val === false;
+        });
+
+        console.log(data);
+
+        color.domain(d3.keys(data[0]).filter(function(key) { return key !== "date"; }));
+
+        data.forEach(function(d) {
+            d.date = parseDate(d.date);
+        });
+
+        var operatingSystems = color.domain().map(function(name) {
+            return {
+                name: name,
+                values: data.map(function(d) {
+                    return {date: d.date, downloads: +d[name]};
+                })
+            };
+        });
+
+        x.domain(d3.extent(data, function(d) { return d.date; }));
+
+        y.domain([
+            d3.min(operatingSystems, function(c) { return d3.min(c.values, function(v) { return v.downloads; }); }),
+            d3.max(operatingSystems, function(c) { return d3.max(c.values, function(v) { return v.downloads; }); })
+        ]);
+
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        svg.append("g")
+            .attr("class", "xx axis")
+            .attr("transform", "translate(30,"+ (height+17) + ")")
+            .call(xAxis2);
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("Downloads");
+
+        var os = svg.selectAll(".os")
+            .data(operatingSystems)
+            .enter().append("g")
+            .attr("class", "os");
+
+        os.append("path")
+            .attr("class", "line")
+            .attr("d", function(d) { return line(d.values); })
+            .style("stroke", function(d) { return color(d.name); });
+
+        os.append("text")
+            .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
+            .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.downloads) + ")"; })
+            .attr("x", 3)
+            .attr("dy", ".35em")
+            .text(function(d) { return osNameMap[d.name]; });
+    });
+});
