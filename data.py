@@ -36,6 +36,21 @@ def weekly():
 @app.route('/os')
 @with_db
 def os():
+    os = []
+    for i in g.mongo.mongousage['gen.firstPiece.day7'].find().sort('value', pymongo.DESCENDING):
+        bad = False
+        for j in ('.', '-', 'log', 'stats'):
+            if i['_id'].find(j) >= 0:
+                bad = True
+                break
+        if bad:
+            continue
+        os.append(i)
+    return json.dumps(os)
+
+@app.route('/os_monthly')
+@with_db
+def os():
     return json.dumps([x for x in g.mongo.mongousage['gen.monthly.os'].find().sort('_id', pymongo.DESCENDING)])
 
 @app.route('/versions')
