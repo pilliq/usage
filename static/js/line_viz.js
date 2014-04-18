@@ -32,7 +32,7 @@ $(document).ready(function() {
 
     console.log('x: ' + x());
     console.log('xTime: ' + xTime());
-    
+
     var xAxis2 = d3.svg.axis() // years
         .scale(xTime)
         .ticks(d3.time.years, 1)
@@ -61,39 +61,32 @@ $(document).ready(function() {
             return datum._id.t;
         });
 
-        var data = _.map(d3.keys(groupedData), function(key, index) {
-            if(index < 12) {
-                console.log(key);
-                console.log(groupedData[key]);
+        var last12Months = d3.keys(groupedData).slice(0, 12);
 
-                var othersTotal = 0;
-                var downloads = {};
-                var osStat = {
-                    date: key
-                };
+        var data = _.map(last12Months, function(key, index) {
+            console.log(key);
+            console.log(groupedData[key]);
 
-                for(var i=0; i < groupedData[key].length; i++) {
-                    var os = groupedData[key][i]["_id"]["os"];
+            var othersTotal = 0;
+            var downloads = {};
+            var osStat = {
+                date: key
+            };
 
-                    if(os === "win32" || os === "osx" || os === "linux" || os === "src") {
-                        downloads[ groupedData[key][i]["_id"]["os"] ] = groupedData[key][i]["value"];
-                    } else {
-                        othersTotal += groupedData[key][i]["value"];
-                    }
+            for(var i=0; i < groupedData[key].length; i++) {
+                var os = groupedData[key][i]["_id"]["os"];
 
-                    downloads["other"] = othersTotal;
+                if(os === "win32" || os === "osx" || os === "linux" || os === "src") {
+                    downloads[ groupedData[key][i]["_id"]["os"] ] = groupedData[key][i]["value"];
+                } else {
+                    othersTotal += groupedData[key][i]["value"];
                 }
-                _.extend(osStat, downloads);
 
-                return osStat;
-
-            } else {
-                return false;
+                downloads["other"] = othersTotal;
             }
-        });
+            _.extend(osStat, downloads);
 
-        data = _.reject(data, function(val) {
-            return val === false;
+            return osStat;
         });
 
         console.log(data);
