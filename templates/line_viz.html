@@ -15,11 +15,31 @@
 
         .line {
           fill: none;
-          stroke: steelblue;
-          stroke-width: 1.5px;
         }
     </style>
     <body>
+        <ul class="legend">
+            <li>
+                <span class="square windows"></span>
+                <span class="label">Windows</span>
+            </li>
+            <li>
+                <span class="square linux"></span>
+                <span class="label">Linux</span>
+            </li>
+            <li>
+                <span class="square osx"></span>
+                <span class="label">Mac OS X</span>
+            </li>
+            <li>
+                <span class="square source"></span>
+                <span class="label">Source</span>
+            </li>
+            <li>
+                <span class="square other"></span>
+                <span class="label">Other</span>
+            </li>
+        </ul>
         <div id="viz"></div>
         <script type="text/javascript" src="/static/js/jquery.min.js"></script>
         <script type="text/javascript" src="/static/js/d3.min.js"></script>

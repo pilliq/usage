@@ -109,3 +109,36 @@ polyline{
   font-weight: bold;
   fill: #a09f9e;
 }
+
+
+/* for os over time line graph */
+.legend {
+  text-align: center;
+  width: 960px;
+}
+.legend li {
+  display: inline-block;
+  margin-right: 30px;
+}
+.legend li .square {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 2px;
+  margin-bottom: -2px;
+}
+.legend li .square.windows { background: #373e50; }
+.legend li .square.linux { background: #535d77; }
+.legend li .square.osx { background: #6e7c9f; }
+.legend li .square.source { background: #8b96b2; }
+.legend li .square.other { background: #a8b0c5; }
+
+.legend li .label {
+  font-size: 12px;
+  font-weight: bold;
+  color: #a09f9e;
+}
+g.os path.line {
+  stroke-width: 2px;
+}
+
