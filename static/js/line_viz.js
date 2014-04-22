@@ -91,8 +91,9 @@ $(document).ready(function() {
         });
 
         console.log(data);
-
-        color.domain(d3.keys(data[0]).filter(function(key) { return key !== "date"; }));
+        
+        color.domain(["win32", "linux", "osx", "src", "other"]);
+        
 
         data.forEach(function(d) {
             d.date = parseDate(d.date);
