@@ -91,7 +91,7 @@ $(document).ready(function() {
         });
 
         console.log(data);
-        
+
         color.domain(["win32", "linux", "osx", "src", "other"]);
         
 
@@ -141,13 +141,18 @@ $(document).ready(function() {
 
         os.append("path")
             .attr("class", "line")
-            .attr("d", function(d) { return line(d.values); })
+            .attr("d", function(d) { return line(d.values.slice(1, d.values.length)); })
+            .style("stroke", function(d) { return color(d.name); });
+
+        os.append("path")
+            .attr("class", "line current")
+            .attr("d", function(d) { return line(d.values.slice(0, 2)); })
             .style("stroke", function(d) { return color(d.name); });
 
         os.append("text")
             .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
-            .attr("transform", function(d) { console.log(d.value.downloads); return "translate(" + x(d.value.date) + "," + y(d.value.downloads) + ")"; })
-            .attr("x", width)
+            .attr("transform", function(d) { console.log(d); return "translate(" + x(d.value.date) + "," + y(d.value.downloads) + ")"; })
+            .attr("x", 3)
             .attr("dy", ".35em")
             .text(function(d) { return osNameMap[d.name]; });
     });

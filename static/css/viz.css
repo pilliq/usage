@@ -141,4 +141,7 @@ polyline{
 g.os path.line {
   stroke-width: 2px;
 }
+g.os path.line.current {
+  stroke-dasharray: 5, 2;
+}
 
