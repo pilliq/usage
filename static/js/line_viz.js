@@ -34,7 +34,7 @@ $(document).ready(function() {
     console.log('xTime: ' + xTime());
 
     var xAxis2 = d3.svg.axis() // years
-        .scale(xTime)
+        .scale(x)
         .ticks(d3.time.years, 1)
         .tickFormat(d3.time.format("%y"))
         .tickSize(0)
@@ -43,6 +43,7 @@ $(document).ready(function() {
     var yAxis = d3.svg.axis()
         .scale(y)
         .tickSize(-width)
+        .tickFormat(d3.format("s"))
         .orient("left");
 
     var line = d3.svg.line()
@@ -120,7 +121,7 @@ $(document).ready(function() {
 
         svg.append("g")
             .attr("class", "xx axis")
-            .attr("transform", "translate(30,"+ (height+17) + ")")
+            .attr("transform", "translate(0,"+ (height+19) + ")")
             .call(xAxis2);
 
         svg.append("g")
@@ -130,8 +131,7 @@ $(document).ready(function() {
             .attr("transform", "rotate(-90)")
             .attr("y", 6)
             .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .text("Downloads");
+            .style("text-anchor", "end");
 
         var os = svg.selectAll(".os")
             .data(operatingSystems)
@@ -145,8 +145,8 @@ $(document).ready(function() {
 
         os.append("text")
             .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
-            .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.downloads) + ")"; })
-            .attr("x", 3)
+            .attr("transform", function(d) { console.log(d.value.downloads); return "translate(" + x(d.value.date) + "," + y(d.value.downloads) + ")"; })
+            .attr("x", width)
             .attr("dy", ".35em")
             .text(function(d) { return osNameMap[d.name]; });
     });
