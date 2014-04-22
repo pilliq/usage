@@ -114,7 +114,7 @@ polyline{
 /* for os over time line graph */
 .legend {
   text-align: center;
-  width: 960px;
+  width: 650px;
 }
 .legend li {
   display: inline-block;
@@ -142,6 +142,6 @@ g.os path.line {
   stroke-width: 2px;
 }
 g.os path.line.current {
-  stroke-dasharray: 5, 2;
+  stroke-dasharray: 5, 3;
 }
 

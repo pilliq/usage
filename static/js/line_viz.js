@@ -8,8 +8,8 @@ $(document).ready(function() {
     };
 
     var margin = {top: 20, right: 15, bottom: 35, left: 30},
-        width = 960 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+        width = 650 - margin.left - margin.right,
+        height = 350 - margin.top - margin.bottom;
 
     var parseDate = d3.time.format("%Y-%m").parse;
 
