@@ -262,8 +262,10 @@ $(document).ready(function() {
             .attr("class", "y axis")
             .call(yAxis);
 
-        var statEnter = d3.select("body").insert("ul", ":first-child")
-            .attr("class", "legend")
+        var legend = d3.select("body").insert("ul", ":first-child")
+            .attr("class", "legend");
+
+        var statEnter = legend
             .selectAll("li")
           .data(layers).enter().append("li");
         
@@ -274,18 +276,10 @@ $(document).ready(function() {
         statEnter.append("span")
             .attr("class", "label")
             .text(function(d) { return d.key; });
-            
 
-//        var square = statEnter.append("span")
-//            .attr("class", "label");
-//
-//        square.append("span")
-//            .attr("class", "square")
-//            .style("background", function(d, i) { return z(i); });
-//
-//        square.append("span")
-//            .attr("class", "label-text")
-//            .text(function(d) { return d.key; });
-//
+        var legendPxWidth = legend.style("width");
+        var legendWidth = +legendPxWidth.substring(0, legendPxWidth.length-2);
+        
+        legend.style("width", (legendWidth + margin.left) + "px");
     });
 });
