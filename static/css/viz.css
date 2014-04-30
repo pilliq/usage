@@ -1,8 +1,14 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
 svg {
     background-color: white;
 }
 
 body {
+  background-color: #fff;
   font-family: "PT Sans", Helvetica, Arial, sans-serif;
   font-size: 10px;
   -webkit-font-smoothing: antialiased;
@@ -110,7 +116,6 @@ polyline{
   fill: #a09f9e;
 }
 
-
 /* for os over time line graph */
 .legend {
   text-align: center;
@@ -145,3 +150,7 @@ g.os path.line.current {
   stroke-dasharray: 5, 3;
 }
 
+path.layer {
+    stroke: #fff;
+    stroke-width: 1px;
+}
