@@ -5,6 +5,11 @@ $(document).ready(function() {
 
     var barPad = 1.25;
 
+    var downloadTypeMap = {
+        "total": "Total Downloads",
+        "unique": "Unique Downloads",
+    };
+
     var x = d3.scale.ordinal()
         .rangeRoundBands([0, width], .2);
 
@@ -91,10 +96,10 @@ $(document).ready(function() {
         });
         var current = data[data.length-1];
         console.log(current);
-        d3.select("#total-downloads")
-            .text(comma(current.value.total));
-        d3.select("#unique-downloads")
-            .text(comma(current.value.unique));
+        //d3.select("#total-downloads")
+        //    .text(comma(current.value.total));
+        //d3.select("#unique-downloads")
+        //    .text(comma(current.value.unique));
         
 
         color.domain(d3.keys(data[0].value));
@@ -155,7 +160,27 @@ $(document).ready(function() {
             .attr("width", x.rangeBand())
             .attr("height", function(d) { console.log(d); return Math.abs(y(d.value.unique+d.value.total) - y(0) - barPad); })
             .attr("fill", "url(#current-pattern)");
-        
+
+        var legend = d3.select("body").insert("ul", ":first-child")
+            .attr("class", "legend")
+
+        var statEnter = legend
+            .selectAll("li")
+            .data(color.domain()).enter().append("li")
+
+        statEnter.append("span")
+            .attr("class", "square")
+            .style("background", function(d) { return color(d); });
+
+        statEnter.append("span")
+            .attr("class", "label")
+            .text(function(d) { return downloadTypeMap[d]; });
+
+        var legendPxWidth = legend.style("width");
+        var legendWidth = +legendPxWidth.substring(0, legendPxWidth.length-2);
+
+        legend.style("width", (legendWidth + margin.left) + "px");
+
         //var legend = d3.select("#viz").append("svg")
         //    .attr("class", "legend")
         //    .attr("width", width + margin.left + margin.right)
