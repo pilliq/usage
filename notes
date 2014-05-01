@@ -1,0 +1,1 @@
+convert pie_viz.gif.old -shave 17x17 pie_viz.gif
