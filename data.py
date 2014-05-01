@@ -58,6 +58,10 @@ def os_monthly():
 def versions():
     return json.dumps([x for x in g.mongo.mongousage['gen.monthly.version'].find().sort('_id', pymongo.DESCENDING)], default=json_util.default)
 
+@app.route('/numbers')
+def numbers():
+    return flask.render_template('numbers.html')
+
 @app.route('/viz')
 def viz():
     return flask.render_template('viz.html')

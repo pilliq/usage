@@ -28,6 +28,80 @@ body {
 .clearfix { display: block; }
 /* close commented backslash hack */
 
+
+.download-stats th {
+  font-size: 14px;
+  text-align: left;
+  font-weight: bold;
+  color: #a09f9e;
+  padding: 0 25px;
+  border-bottom: 1px solid #f5f6f7;
+}
+
+.download-stats th .caveat {
+  font-weight: normal;
+}
+
+.download-stats td {
+  text-align: left;
+  font-size: 36px;
+  font-weight: bold;
+  color: #494747;
+  padding: 0 25px;
+  border-bottom: 1px solid #f5f6f7;
+}
+
+.download-stats td.label strong {
+  display: block;
+  text-align: right;
+  font-size: 14px;
+  text-transform: uppercase;
+  color: #494747;
+}
+
+.download-stats td.label span {
+  display: block;
+  text-align: right;
+  font-weight: normal;
+  font-size: 12px;
+  color: #a09f9e;
+}
+
+.download-stats .change-number {
+  display: block;
+  float: left;
+  position: relative;
+  top: 6px;
+}
+
+.download-stats .change-indicator {
+  display: block;
+  float: left;
+  position: relative;
+  margin-left: 10px;
+  top: -3px;
+}
+
+.download-stats .change-indicator .percent {
+  font-size: 12px;
+  color: #a09f9e;
+  font-weight: normal;
+}
+
+.download-stats .change-indicator .up {
+  border: 8px solid transparent;
+  border-bottom: 14px solid #6ca439;
+  width: 0;
+  height: 0;
+}
+
+.download-stats .change-indicator .down {
+  border: 8px solid transparent;
+  border-top: 14px solid #a83f1c;
+  width: 0;
+  height: 0;
+}
+
 .axis path,
 .axis line {
   fill: none;
