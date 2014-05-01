@@ -3,6 +3,8 @@ $(document).ready(function() {
         width = 650 - margin.left - margin.right,
         height = 350 - margin.top - margin.bottom;
 
+    var barPad = 1.25;
+
     var x = d3.scale.ordinal()
         .rangeRoundBands([0, width], .2);
 
@@ -41,6 +43,34 @@ $(document).ready(function() {
         .attr("transform", "translate(" + margin.left + "," + (margin.top) + ")");
 
     var comma = d3.format(",");
+
+    var defs = svg.append("defs");
+
+    console.log("rangeband");
+    console.log(x.rangeBand())
+    var patternSize = 4;
+    var plaidSize = 2;
+
+    var pattern = defs.append("pattern")
+        .attr("id", "current-pattern")
+        .attr("patternUnits", "userSpaceOnUse")
+        .attr("width", patternSize)
+        .attr("height", patternSize)
+      .append("g");
+
+    pattern.append("rect")
+        .attr("x", -patternSize)
+        .attr("y", -patternSize)
+        .attr("height", patternSize)
+        .attr("width", patternSize)
+        .attr("stroke", "none")
+        .attr("fill", "transparent");
+
+    pattern.append("circle")
+        .attr("r", plaidSize)
+        .attr("cx", patternSize/2) //make sure rect is centered. x/y specifies x/y position of top left corner
+        .attr("cy", patternSize/2)
+        .style("fill", "white");
 
     d3.json("/monthly", function(err, allData) {
         // parse dates into objects
@@ -104,12 +134,27 @@ $(document).ready(function() {
             .attr("class", "data total")
             .attr("fill", color("total"));
 
-        top.attr("y", function(d) { var val = y(+d.value.unique + +d.value.total) - 1.25; console.log(val); return val; })
+        top.attr("y", function(d) { var val = y(+d.value.unique + +d.value.total) - barPad; console.log(val); return val; })
             .attr("height", function(d) { return Math.abs(y(d.value.total) - y(0)); });
 
         dates.selectAll("rect.data")
             .attr("x", function(d) { return x(d["_id"]); })
             .attr("width", x.rangeBand());
+
+        var currentFill = svg.selectAll("g.current")
+            .data(data.splice(data.length-1, data.length-1));
+
+
+        var currentEnter = currentFill.enter().append("g")
+            .attr("class", "current");
+
+        currentEnter.append("rect")
+            .attr("class", "current")
+            .attr("x", function(d) { return x(d["_id"]); })
+            .attr("y", function(d) { return y(+d.value.unique+d.value.total) - barPad; })
+            .attr("width", x.rangeBand())
+            .attr("height", function(d) { console.log(d); return Math.abs(y(d.value.unique+d.value.total) - y(0) - barPad); })
+            .attr("fill", "url(#current-pattern)");
         
         //var legend = d3.select("#viz").append("svg")
         //    .attr("class", "legend")
