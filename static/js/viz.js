@@ -54,7 +54,7 @@ $(document).ready(function() {
     console.log("rangeband");
     console.log(x.rangeBand())
     var patternSize = 4;
-    var plaidSize = 2;
+    var plaidSize = 1.5;
 
     var pattern = defs.append("pattern")
         .attr("id", "current-pattern")
