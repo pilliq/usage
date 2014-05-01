@@ -7,7 +7,7 @@ $(document).ready(function() {
         "other": "Other"
     };
 
-    var margin = {top: 20, right: 15, bottom: 35, left: 30},
+    var margin = {top: 20, right: 30, bottom: 40, left: 60},
         width = 650 - margin.left - margin.right,
         height = 350 - margin.top - margin.bottom;
 
@@ -155,5 +155,25 @@ $(document).ready(function() {
             .attr("x", 3)
             .attr("dy", ".35em")
             .text(function(d) { return osNameMap[d.name]; });
+
+        var legend = d3.select("body").insert("ul", ":first-child")
+            .attr("class", "legend");
+
+        var statEnter = legend
+            .selectAll("li")
+          .data(operatingSystems).enter().append("li");
+        
+        statEnter.append("span")
+            .attr("class", "square")
+            .style("background", function(d) { return color(d.name); });
+
+        statEnter.append("span")
+            .attr("class", "label")
+            .text(function(d) { return osNameMap[d.name]; });
+
+        var legendPxWidth = legend.style("width");
+        var legendWidth = +legendPxWidth.substring(0, legendPxWidth.length-2);
+        
+        legend.style("width", (legendWidth + margin.left) + "px");
     });
 });
