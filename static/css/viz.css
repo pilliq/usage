@@ -95,11 +95,19 @@ body {
   height: 0;
 }
 
+.download-stats .change-indicator .up.not {
+  border-bottom-color: transparent;
+}
+
 .download-stats .change-indicator .down {
   border: 8px solid transparent;
   border-top: 14px solid #a83f1c;
   width: 0;
   height: 0;
+}
+
+.download-stats .change-indicator .down.not {
+  border-top-color: transparent;
 }
 
 .axis path,

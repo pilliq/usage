@@ -7,8 +7,8 @@
       <thead>
         <tr>
           <th>&nbsp;</th>
-          <th>March</th>
-          <th>April <span class="caveat">(projected)</span></th>
+          <th id="previous-header">March</th>
+          <th id="projected-header">April <span class="caveat">(projected)</span></th>
           <th>Change <span class="caveat">(projected)</span></th>
         </tr>
       </thead>
@@ -18,14 +18,14 @@
             <strong>Total</strong>
             <span>downloads</span>
           </td>
-          <td>259,938</td>
-          <td>259,938</td>
+          <td id="previous-total">259,998</td>
+          <td id="projected-total">269,938</td>
           <td>
-            <span class="change-number">253</span>
+            <span id="total-change-value" class="change-number">253</span>
             <div class="change-indicator">
-              <div class="up"></div>
-              <div class="percent">2%</div>
-              <div class="down"></div>
+              <div id="total-change-up" class="up"></div>
+              <div id="total-change-percent" class="percent">2%</div>
+              <div id="total-change-down" class="down"></div>
             </div>
           </td>
         </tr>
@@ -34,14 +34,14 @@
             <strong>Unique</strong>
             <span>downloads</span>
           </td>
-          <td>259,938</td>
-          <td>259,938</td>
+          <td id="previous-unique">359,938</td>
+          <td id="projected-unique">259,938</td>
           <td>
-            <span class="change-number">253</span>
+            <span id="unique-change-value" class="change-number">253</span>
             <div class="change-indicator">
-              <div class="up"></div>
-              <div class="percent">2%</div>
-              <div class="down"></div>
+              <div id="unique-change-up" class="up"></div>
+              <div id="unique-change-percent" class="percent">2%</div>
+              <div id="unique-change-down" class="down"></div>
             </div>
           </td>
         </tr>
@@ -49,5 +49,6 @@
     </table>
     <script type="text/javascript" src="/static/js/jquery.min.js"></script>
     <script type="text/javascript" src="/static/js/d3.min.js"></script>
+    <script type="text/javascript" src="/static/js/numbers.js"></script>
   </body>
 </html>
