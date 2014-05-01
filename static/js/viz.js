@@ -1,7 +1,7 @@
 $(document).ready(function() {
-    var margin = {top: 20, right: 20, bottom: 50, left: 40, legend: 75},
+    var margin = {top: 20, right: 30, bottom: 40, left: 60},
         width = 650 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+        height = 350 - margin.top - margin.bottom;
 
     var x = d3.scale.ordinal()
         .rangeRoundBands([0, width], .2);
@@ -34,7 +34,7 @@ $(document).ready(function() {
         .tickSize(-width)
         .tickFormat(d3.format("s"));
 
-    var svg = d3.select("#viz").append("svg")
+    var svg = d3.select("body").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
       .append("g")
@@ -111,12 +111,12 @@ $(document).ready(function() {
             .attr("x", function(d) { return x(d["_id"]); })
             .attr("width", x.rangeBand());
         
-        var legend = d3.select("#viz").append("svg")
-            .attr("class", "legend")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", 300)
-          .selectAll(".elem")
-              .data(color.domain().slice().reverse());
+        //var legend = d3.select("#viz").append("svg")
+        //    .attr("class", "legend")
+        //    .attr("width", width + margin.left + margin.right)
+        //    .attr("height", 300)
+        //  .selectAll(".elem")
+        //      .data(color.domain().slice().reverse());
 
         //var legend = d3.select("#viz").select("svg").selectAll(".legend")
         //    .data(color.domain().slice().reverse())
