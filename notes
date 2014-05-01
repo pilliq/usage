@@ -4,3 +4,6 @@ convert pie_viz.gif.old -shave 17x17 pie_viz.gif
 Number header:
 convert static/img/numbers.gif.old -gravity East -chop 325x0 static/img/numbers.gif
 convert static/img/numbers.gif.old -gravity South -chop 0x875 static/img/numbers.gif
+
+Send mail:
+cat email <(curl http://107.170.58.71:8000/email_template 2>/dev/null) | sendmail -i -t
