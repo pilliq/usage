@@ -187,6 +187,7 @@ $(document).ready(function() {
 
     var yAxis = d3.svg.axis()
         .scale(y)
+        .tickSize(0)
         .orient("left")
         .tickFormat(formatPercent);
 
@@ -211,6 +212,20 @@ $(document).ready(function() {
         .attr("height", height + margin.top + margin.bottom)
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var defs = svg.append("defs");
+
+    var patternSize = 4;
+    var dotRadius = 2;
+
+    function newPattern(name, size, defs) {
+        return defs.append('pattern')
+            .attr("id", name)
+            .attr("patternUnits", "userSpaceOnUse")
+            .attr("width", size)
+            .attr("height", size)
+            .append("g");
+    }
 
     d3.json("/versions", function(allData) {
         var data = filter(allData);
@@ -241,12 +256,42 @@ $(document).ready(function() {
         console.log(y.domain());
         console.log(x.domain());
         
-        svg.selectAll(".layer")
+        var patternEnter = defs.selectAll("pattern")
             .data(layers)
-          .enter().append("path")
+          .enter().append("pattern")
+            .attr("id", function(d) { return d.key; })
+            .attr("patternUnits", "userSpaceOnUse")
+            .attr("width", patternSize)
+            .attr("height", patternSize)
+            .append("g")
+
+        patternEnter.append("rect")
+            .attr("x", -patternSize)
+            .attr("y", -patternSize)
+            .attr("height", patternSize*3)
+            .attr("width", patternSize*3)
+            .style("stroke", "none")
+            .style("fill", "#fff");
+
+        patternEnter.append("circle")
+            .attr("r", dotRadius)
+            .attr("cx", patternSize/2)
+            .attr("cy", patternSize/2)
+            .style("fill", function(d, i) { return z(i); });
+
+        var layerEnter = svg.selectAll(".layer")
+            .data(layers)
+          .enter();
+
+        layerEnter.append("path")
             .attr("class", "layer")
-            .attr("d", function(d) { if (d.key == "2.4.x") { console.log(area(d.values)); } return area(d.values); })
+            .attr("d", function(d) { if (d.key == "2.4.x") { console.log(area(d.values)); } return area(d.values.slice(1, d.values.length)); })
             .style("fill", function(d, i) { console.log(d, z(i));return z(i); });
+
+        layerEnter.append("path")
+            .attr("class", "layer current")
+            .attr("d", function(d) { return area(d.values.slice(0, 2)); })
+            .style("fill", function(d) { return "url(#" + d.key + ")"; });
 
         svg.append("g")
             .attr("class", "x axis")
