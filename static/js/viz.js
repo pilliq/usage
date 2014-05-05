@@ -53,8 +53,8 @@ $(document).ready(function() {
 
     console.log("rangeband");
     console.log(x.rangeBand())
-    var patternSize = 4;
-    var plaidSize = 1.5;
+    var patternSize = 3;
+    var rectSize = patternSize/3;
 
     var pattern = defs.append("pattern")
         .attr("id", "current-pattern")
@@ -71,11 +71,12 @@ $(document).ready(function() {
         .attr("stroke", "none")
         .attr("fill", "transparent");
 
-    pattern.append("circle")
-        .attr("r", plaidSize)
-        .attr("cx", patternSize/2) //make sure rect is centered. x/y specifies x/y position of top left corner
-        .attr("cy", patternSize/2)
-        .style("fill", "white");
+    pattern.append("rect")
+        .attr("x", patternSize/2 - rectSize/2)
+        .attr("y", patternSize/2 - rectSize/2)
+        .attr("width", rectSize)
+        .attr("height", rectSize)
+        .attr("fill", "white")
 
     d3.json("/monthly", function(err, allData) {
         // parse dates into objects
