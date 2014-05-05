@@ -213,11 +213,6 @@ $(document).ready(function() {
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var defs = svg.append("defs");
-
-    var patternSize = 4;
-    var dotRadius = 2;
-
     function newPattern(name, size, defs) {
         return defs.append('pattern')
             .attr("id", name)
@@ -255,29 +250,38 @@ $(document).ready(function() {
         y.domain([0, maxY(formatted)]);
         console.log(y.domain());
         console.log(x.domain());
-        
-        var patternEnter = defs.selectAll("pattern")
-            .data(layers)
-          .enter().append("pattern")
-            .attr("id", function(d) { return d.key; })
-            .attr("patternUnits", "userSpaceOnUse")
-            .attr("width", patternSize)
-            .attr("height", patternSize)
-            .append("g")
 
-        patternEnter.append("rect")
+        var defs = svg.append("defs");
+
+        var patternSize = 3;
+        var rectSize = patternSize/3;
+
+        var pathStrokeWidth = 1; // 1px
+
+        var now = new Date(2013, 11);
+        var previous = new Date(now);
+        previous.setMonth(now.getMonth() - 1);
+
+        console.log(x(previous));
+
+        var currentPattern = newPattern("current-pattern", patternSize, defs);
+
+        currentPattern.append("rect")
             .attr("x", -patternSize)
             .attr("y", -patternSize)
-            .attr("height", patternSize*3)
-            .attr("width", patternSize*3)
-            .style("stroke", "none")
-            .style("fill", "#fff");
+            .attr("height", patternSize)
+            .attr("width", patternSize)
+            .attr("stroke", "none")
+            .attr("fill", "transparent");
 
-        patternEnter.append("circle")
-            .attr("r", dotRadius)
-            .attr("cx", patternSize/2)
-            .attr("cy", patternSize/2)
-            .style("fill", function(d, i) { return z(i); });
+        currentPattern
+          .append("rect")
+            .attr("x", patternSize/2 - rectSize/2 - 1)
+            .attr("y", patternSize/2 - rectSize/2 - 1)
+            .attr("width", rectSize)
+            .attr("height", rectSize)
+            .attr("fill", "white")
+            //.attr("transform", "rotate(45," + patternSize/2 + "," + patternSize/2 + ")"); // make into a diamond
 
         var layerEnter = svg.selectAll(".layer")
             .data(layers)
@@ -285,13 +289,13 @@ $(document).ready(function() {
 
         layerEnter.append("path")
             .attr("class", "layer")
-            .attr("d", function(d) { if (d.key == "2.4.x") { console.log(area(d.values)); } return area(d.values.slice(1, d.values.length)); })
+            .attr("d", function(d) { return area(d.values); })
             .style("fill", function(d, i) { console.log(d, z(i));return z(i); });
 
-        layerEnter.append("path")
-            .attr("class", "layer current")
-            .attr("d", function(d) { return area(d.values.slice(0, 2)); })
-            .style("fill", function(d) { return "url(#" + d.key + ")"; });
+        //layerEnter.append("path")
+        //    .attr("class", "layer current")
+        //    .attr("d", function(d) { return area(d.values.slice(0, 2)); })
+        //    .style("fill", function(d) { return "url(#" + d.key + ")"; });
 
         svg.append("g")
             .attr("class", "x axis")
@@ -307,6 +311,14 @@ $(document).ready(function() {
             .attr("class", "y axis")
             .call(yAxis);
 
+        svg
+          .append("rect")
+            .attr("x", x(previous) - pathStrokeWidth)
+            .attr("y", 0)
+            .attr("width", x(now) - x(previous) + pathStrokeWidth)
+            .attr("height", y(0) - pathStrokeWidth)
+            .attr("fill", "url(#current-pattern)");
+        
         var legend = d3.select("body").insert("ul", ":first-child")
             .attr("class", "legend");
 
