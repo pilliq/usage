@@ -14,7 +14,7 @@
             <tr style="color:#ffffff; height:45px; " bgcolor="#3B291F">
               <td valign="middle" style="font-family:Arial, Helvetica, sans-serif; padding-left:25px; font-size:14px; ">
                 <div class="mktEditable" id="Dynamic_Content_1" style="width:100%; ">
-                  <strong>April 2014</strong>
+                    <strong>{{current_date.strftime('%B %d, %Y')}}</strong>
                 </div>
               </td>
             </tr>
@@ -37,8 +37,8 @@
                             <thead>
                               <tr>
                                 <th style="font-size: 14px; text-align: left; font-weight: bold; color: #a09f9e; padding: 0 25px; border-bottom: 1px solid #f5f6f7;">&nbsp;</th>
-                                <th id="previous-header" style="font-size: 14px; text-align: left; font-weight: bold; color: #a09f9e; padding: 2px 20px; border-bottom: 1px solid #f5f6f7;">March</th>
-                                <th id="projected-header" style="font-size: 14px; text-align: left; font-weight: bold; color: #a09f9e; padding: 2px 20px; border-bottom: 1px solid #f5f6f7;">April <span class="caveat" style="font-weight: normal;">(projected)</span></th>
+                                <th id="previous-header" style="font-size: 14px; text-align: left; font-weight: bold; color: #a09f9e; padding: 2px 20px; border-bottom: 1px solid #f5f6f7;">{{previous_date.strftime('%B')}}</th>
+                                <th id="projected-header" style="font-size: 14px; text-align: left; font-weight: bold; color: #a09f9e; padding: 2px 20px; border-bottom: 1px solid #f5f6f7;">{{current_date.strftime('%B')}} <span class="caveat" style="font-weight: normal;">(projected)</span></th>
                                 <th colspan="2" style="font-size: 14px; text-align: left; font-weight: bold; color: #a09f9e; padding: 2px 20px; border-bottom: 1px solid #f5f6f7;">Change <span class="caveat" style="font-weight: normal;">(projected)</span></th>
                               </tr>
                             </thead>
@@ -48,14 +48,21 @@
                                   <strong style="display: block; text-align: right; font-size: 14px; text-transform: uppercase; color: #494747;">Total</strong>
                                   <span style="display: block; text-align: right; font-weight: normal; font-size: 12px; color: #a09f9e;">downloads</span>
                                 </td>
-                                <td id="previous-total" style="text-align: left; font-size: 36px; font-weight: bold; color: #494747; padding: 2px 20px; border-bottom: 1px solid #f5f6f7;">259,998</td>
-                                <td id="projected-total" title="current: 35,589" style="text-align: left; font-size: 36px; font-weight: bold; color: #494747; padding: 2px 20px; border-bottom: 1px solid #f5f6f7;">269,938</td>
+                                <td id="previous-total" style="text-align: left; font-size: 36px; font-weight: bold; color: #494747; padding: 2px 20px; border-bottom: 1px solid #f5f6f7;">{{previous_total}}</td>
+                                <td id="projected-total" title="current: {{current_total}}" style="text-align: left; font-size: 36px; font-weight: bold; color: #494747; padding: 2px 20px; border-bottom: 1px solid #f5f6f7;">{{projected_total}}</td>
                                 <td style="text-align: left; font-size: 36px; font-weight: bold; color: #494747; padding: 2px 20px; border-bottom: 1px solid #f5f6f7;">
-                                  <span id="total-change-value" class="change-number">253</span>
+                                    <span id="total-change-value" class="change-number">{{total_change_value}}</span>
                                 </td>
                                 <td align="left" style="text-align: left; font-size: 36px; font-weight: bold; color: #494747; padding: 2px 20px; border-bottom: 1px solid #f5f6f7;">
+                                {% if total_change == 2 %}
                                   <img src="{{url_for('static', filename='img/up-arrow.png', _external=True)}}" width="16" height="14" style="display:block;">
-                                  <div id="total-change-percent" class="percent" style="font-size: 12px; color: #a09f9e; font-weight: normal;">2%</div>
+                                  <div id="total-change-percent" class="percent" style="font-size: 12px; color: #a09f9e; font-weight: normal;">{{total_change_percent}}</div>
+                                {% elif total_change == 1 %}
+                                  <div id="total-change-percent" class="percent" style="font-size: 12px; color: #a09f9e; font-weight: normal;">{{total_change_percent}}</div>
+                                  <img src="{{url_for('static', filename='img/down-arrow.png', _external=True)}}" width="16" height="14" style="display:block;">
+                                {% else %}
+                                  <div id="total-change-percent" class="percent" style="font-size: 12px; color: #a09f9e; font-weight: normal;">{{total_change_percent}}</div>
+                                {% endif %}
                                 </td>
                               </tr>
                               <tr>
@@ -63,14 +70,21 @@
                                   <strong style="display: block; text-align: right; font-size: 14px; text-transform: uppercase; color: #494747;">Unique</strong>
                                   <span style="display: block; text-align: right; font-weight: normal; font-size: 12px; color: #a09f9e;">downloads</span>
                                 </td>
-                                <td id="previous-unique" style="text-align: left; font-size: 36px; font-weight: bold; color: #494747; padding: 2px 20px; border-bottom: 1px solid #f5f6f7;">359,938</td>
-                                <td id="projected-unique" title="current: 35,589" style="text-align: left; font-size: 36px; font-weight: bold; color: #494747; padding: 2px 20px; border-bottom: 1px solid #f5f6f7;">259,938</td>
+                                <td id="previous-unique" style="text-align: left; font-size: 36px; font-weight: bold; color: #494747; padding: 2px 20px; border-bottom: 1px solid #f5f6f7;">{{previous_unique}}</td>
+                                <td id="projected-unique" title="current: {{current_unique}}" style="text-align: left; font-size: 36px; font-weight: bold; color: #494747; padding: 2px 20px; border-bottom: 1px solid #f5f6f7;">{{projected_unique}}</td>
                                 <td style="text-align: left; font-size: 36px; font-weight: bold; color: #494747; padding: 2px 20px; border-bottom: 1px solid #f5f6f7;">
-                                  <span id="unique-change-value" class="change-number">253</span>
+                                    <span id="unique-change-value" class="change-number">{{unique_change_value}}</span>
                                 </td>
                                 <td align="left" style="text-align: left; font-size: 36px; font-weight: bold; color: #494747; padding: 2px 20px; border-bottom: 1px solid #f5f6f7;">
-                                  <div id="unique-change-percent" class="percent" style="font-size: 12px; color: #a09f9e; font-weight: normal;">2%</div>
+                                {% if unique_change == 2 %}
+                                  <img src="{{url_for('static', filename='img/up-arrow.png', _external=True)}}" width="16" height="14" style="display:block;">
+                                  <div id="unique-change-percent" class="percent" style="font-size: 12px; color: #a09f9e; font-weight: normal;">{{unique_change_percent}}</div>
+                                {% elif unique_change == 1 %}
+                                  <div id="unique-change-percent" class="percent" style="font-size: 12px; color: #a09f9e; font-weight: normal;">{{unique_change_percent}}</div>
                                   <img src="{{url_for('static', filename='img/down-arrow.png', _external=True)}}" width="16" height="14" style="display:block;">
+                                {% else %}
+                                  <div id="unique-change-percent" class="percent" style="font-size: 12px; color: #a09f9e; font-weight: normal;">{{unique_change_percent}}</div>
+                                {% endif %}
                                 </td>
                               </tr>
                             </tbody>

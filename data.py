@@ -1,4 +1,6 @@
 from pymongo import MongoClient
+from dateutil.relativedelta import relativedelta
+from datetime import datetime
 from flask import Flask
 from flask import g
 from bson import json_util
@@ -6,6 +8,7 @@ import pymongo
 import flask
 import simplejson as json
 import functools
+import locale
 
 app = Flask(__name__)
 
@@ -79,8 +82,66 @@ def stack():
     return flask.render_template('stack.html')
 
 @app.route('/email_template')
+@with_db
 def email_template():
-    return flask.render_template('email_template.html')
+    def get_point(data, date):
+        for d in data:
+            if datetime.strptime(d['_id'], '%Y-%m') == date:
+                return d
+
+    def i(d):
+        locale.setlocale(locale.LC_ALL, 'en_US')
+        return locale.format("%d", d, grouping=True)
+
+    def f(i):
+        return "{0:.2f}%".format(i * 100)
+
+    monthly = [x for x in g.mongo.mongousage["gen.monthly"].find().sort("_id", pymongo.DESCENDING)]
+    now = datetime(2013, 12, 1)
+    previous = now - relativedelta(months=1)
+    now_point = get_point(monthly, now)
+    previous_point = get_point(monthly, previous)
+
+    projected_total = previous_point['value']['total'] + 1000
+    projected_unique = previous_point['value']['unique'] + 1000
+
+    total_change_value = projected_total - previous_point['value']['total']
+    total_change_percent = float(total_change_value) / float(previous_point['value']['total'])
+
+    unique_change_value = projected_unique - previous_point['value']['unique']
+    unique_change_percent = float(unique_change_value) / float(previous_point['value']['unique'])
+
+    if total_change_value > 0:
+        total_change = 2
+    elif total_change_value < 0:
+        total_change = 1
+    else:
+        total_change = 0
+
+    if unique_change_value > 0:
+        unique_change = 2
+    elif unique_change_value < 0:
+        unique_change = 1
+    else:
+        unique_change = 0
+
+
+    return flask.render_template('email_template.html',
+                                 previous_date = previous,
+                                 current_date = now,
+                                 previous_total=i(previous_point['value']['total']),
+                                 projected_total=i(projected_total),
+                                 total_change_value=i(abs(total_change_value)),
+                                 total_change_percent=f(total_change_percent),
+                                 previous_unique=i(previous_point['value']['unique']),
+                                 projected_unique=i(projected_unique),
+                                 unique_change_value=i(abs(unique_change_value)),
+                                 unique_change_percent=f(unique_change_percent),
+                                 current_total=i(now_point['value']['total']),
+                                 current_unique=i(now_point['value']['unique']),
+                                 total_change=total_change,
+                                 unique_change=unique_change,
+    )
 
 if __name__ == '__main__':
     app.debug = True
