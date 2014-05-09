@@ -122,8 +122,8 @@ def email_template():
     now_point = get_point(monthly, now)
     previous_point = get_point(monthly, previous)
 
-    total_growth = growth(monthly[1:], 'total') + 1000
-    unique_growth = growth(monthly[1:], 'unique') + 1000
+    total_growth = growth(monthly[1:], 'total') + 2000
+    unique_growth = growth(monthly[1:], 'unique') + 2000
     projected_total = math.floor(average(monthly[1:], 'total') + total_growth)
     projected_unique = math.floor(average(monthly[1:], 'unique') + unique_growth)
 
