@@ -9,6 +9,7 @@ import flask
 import simplejson as json
 import functools
 import locale
+import math
 
 app = Flask(__name__)
 
@@ -84,6 +85,25 @@ def stack():
 @app.route('/email_template')
 @with_db
 def email_template():
+    def average(data, key):
+        total = 0
+        for d in data:
+            total += d['value'][key]
+        return total / float(len(data))
+
+    def growth(data, key):
+        """
+        Returns average growth from month to month
+        """
+        total = 0
+        num = 0
+        for i, d in enumerate(data):
+            if i == len(data)-1:
+                break
+            total += data[i+1]['value'][key] - d['value'][key]
+            num += 1
+        return total / float(num)
+
     def get_point(data, date):
         for d in data:
             if datetime.strptime(d['_id'], '%Y-%m') == date:
@@ -102,8 +122,10 @@ def email_template():
     now_point = get_point(monthly, now)
     previous_point = get_point(monthly, previous)
 
-    projected_total = previous_point['value']['total'] + 1000
-    projected_unique = previous_point['value']['unique'] + 1000
+    total_growth = growth(monthly[1:], 'total') + 1000
+    unique_growth = growth(monthly[1:], 'unique') + 1000
+    projected_total = math.floor(average(monthly[1:], 'total') + total_growth)
+    projected_unique = math.floor(average(monthly[1:], 'unique') + unique_growth)
 
     total_change_value = projected_total - previous_point['value']['total']
     total_change_percent = float(total_change_value) / float(previous_point['value']['total'])
